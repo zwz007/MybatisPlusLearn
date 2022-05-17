@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatispluslearn.demo.mapper.UserMapper">
+
+    <select id="findAllUserWithClass"  resultMap="userVo">
+        select id,name,age,update_time,create_time,class_id from user where is_delete=0 limit #{pageNum},#{pageSize};
+    </select>
+
+    <select id="findClassById" parameterType="long" resultType="mybatispluslearn.demo.pojo.MyClass">
+                select id,name from class where id=#{id}
+    </select>
+
+    <select id="findAllUserWithClass2" resultType="mybatispluslearn.demo.pojo.UserWithClass">
+        select user.name name,user.id id,user.age age,user.update_time updateTime,user.create_time createTime,(user.is_delete) isDelete,class.id ClassId,class.name as ClassName from user join class where user.class_id=class.id
+    </select>
+
+    <resultMap id="userVo" type="mybatispluslearn.demo.vo.UserVo">
+        <result property="id" column="id"></result>
+        <result property="name" column="name"></result>
+        <result property="age" column="age"></result>
+        <result property="updateTime" column="update_time"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="C_Id" column="class_id"></result>
+        <collection property="myClasses" javaType="List" select="findClassById" column="class_id">
+        </collection>
+    </resultMap>
+
+
+
+</mapper>
